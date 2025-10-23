@@ -59,10 +59,10 @@ function Producto() {
               ⭐⭐⭐⭐☆ (24 reseñas)
             </div>
 
-            <div className="flex gap-4 mt-4">
+            {/*<div className="flex gap-4 mt-4">
               <button className="bg-[#ABA9C3] text-white p-2 rounded hover:bg-[#275DAD] transition-colors">❤ Favorito</button>
               <button className="bg-[#CED3DC] text-[#5B616A] p-2 rounded hover:bg-[#ABA9C3] transition-colors">🔗 Compartir</button>
-            </div>
+            </div> */}
 
           </div>
         </div>
