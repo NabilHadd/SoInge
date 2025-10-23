@@ -1,7 +1,14 @@
 // src/Home.js
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
+  const navigate = useNavigate(); // hook para navegación
+
+  const handleAdminRedirect = () => {
+    navigate('/Login'); // ruta a la que quieres ir
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="text-5xl font-bold text-blue-600 mb-4">
@@ -10,8 +17,11 @@ function Home() {
       <p className="text-lg text-gray-700">
         Esta es la página principal
       </p>
-      <button className="mt-6 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
-        Botón de prueba
+      <button
+        onClick={handleAdminRedirect}
+        className="mt-6 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+      >
+        Ir a Admin Home
       </button>
     </div>
   );
