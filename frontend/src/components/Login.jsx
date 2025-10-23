@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
+import Producto from "./producto";
 
 function Login() {
   const [email, setEmail] = useState("");
