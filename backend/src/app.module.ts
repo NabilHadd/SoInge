@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
-import { SupabaseModule } from './supabase/supabase.module';
 import { AuthModule } from './auth/auth.module';
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [
@@ -10,8 +10,8 @@ import { AuthModule } from './auth/auth.module';
       isGlobal: true, // hace que ConfigService esté disponible en toda la app
     }),
     UsersModule,
-    SupabaseModule,
     AuthModule,
   ],
+  providers: [PrismaService],
 })
 export class AppModule {}

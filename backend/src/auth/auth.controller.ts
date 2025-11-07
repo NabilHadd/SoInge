@@ -7,6 +7,7 @@ export class AuthController {
 
   @Get('test-db') // <--- endpoint exacto
   async testDB() {
+    this.authService.createUser()
     return this.authService.validateUser();
   }
 }

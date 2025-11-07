@@ -1,24 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { SupabaseService } from '../supabase/supabase.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly supabaseService: SupabaseService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async getUsers() {
-    const { data, error } = await this.supabaseService.client
-      .from('administrador')
-      .select('*');
-    if (error) throw error;
-    return data;
+
+  async getUsers(){
+    const data = await this.prismaService.administrador.findUnique({
+      where: {
+        rut_admin: '214277603'
+      }
+    });
+    return data
   }
 
-  async addUser(user: { name: string; email: string }) {
-    const { data, error } = await this.supabaseService.client
-      .from('administrador')
-      .insert(user)
-      .select();
-    if (error) throw error;
-    return data;
+  async addUser(user: { rut_admin: string; nombre: string; email: string; contraseña: string;}) {
+    try {
+      await this.prismaService.administrador.create({
+      data:user
+    });}
+    catch (error) {
+      throw new Error(error.message)
+    }
   }
 }

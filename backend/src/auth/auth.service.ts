@@ -9,6 +9,21 @@ export class AuthService {
     private readonly usersService: UsersService,
   ) {}
 
+  async createUser() {
+    try {
+      const user = {
+        rut_admin: '214277603',
+        nombre: 'Nabil',
+        email: 'default',
+        contraseña: 'hola'
+      }
+      await this.usersService.addUser(user); 
+
+    } catch (error) {
+      console.error('Error al conectar con la DB:', error);
+      throw error;
+    }
+  }
   // Función de prueba para validar la conexión con la DB
   async validateUser() {
     try {
