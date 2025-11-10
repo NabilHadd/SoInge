@@ -3,35 +3,46 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
-import Producto from "./producto";
+import Toast from "./Toast";
+
+
+
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const [rutAdmin, setRutAdmin] = useState("");
   const [password, setPassword] = useState("");
   const [mensaje, setMensaje] = useState("");
   const navigate = useNavigate();
 
+
+
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(rutAdmin, password)
     try {
+
       const res = await axios.post("http://localhost:3001/auth/login", {
-        email,
+        rutAdmin,
         password,
       });
 
-      // ✅ Unicode para check
-      setMensaje("\u2705 Login exitoso!");
+      console.log(res)
 
       if (res.data.success) {
         navigate("/AdminHome");
       }
     } catch (err) {
-      // ❌ Unicode para cruz
       setMensaje(
-        "\u274C Error: " + (err.response?.data?.message || err.message)
+        " Error: " + (err.response?.data?.message || err.message)
       );
     }
   };
+
+
+
+
 
   return (
     <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 min-h-screen flex items-center justify-center relative overflow-hidden">
@@ -54,15 +65,15 @@ function Login() {
         </h1>
 
         {/* Formulario */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+              Rut sin puntos con guion
             </label>
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={rutAdmin}
+              onChange={(e) => setRutAdmin(e.target.value)}
               required
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
@@ -82,24 +93,17 @@ function Login() {
           </div>
 
           <button
-            type="submit"
+            onClick={handleSubmit}
             className="w-full py-3 bg-gradient-to-r from-blue-100 to-blue-200 border-2 border-blue-700 text-blue-700 font-bold rounded-xl hover:from-blue-200 hover:to-blue-300 hover:shadow-lg transition-all duration-300"
           >
             Iniciar sesión
           </button>
         </form>
-
+      </div>
         {/* Mensaje */}
         {mensaje && (
-          <p
-            className={`mt-5 text-center font-medium ${
-              mensaje.startsWith("\u2705") ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {mensaje}
-          </p>
+          <Toast message={mensaje} type="error" />
         )}
-      </div>
     </div>
   );
 }

@@ -1,9 +1,10 @@
 import React from "react";
 import logo1 from '../assets/logo.webp';  
-import logo2 from '../assets/logo.png';
 
 export default function AdminHome() {
-     <body class="bg-[#FCF7F8] flex h-screen">
+
+  return(
+    <div class="bg-[#FCF7F8] flex h-screen">
   
   
     <aside class="w-64 bg-[#CED3DC] p-6 flex flex-col">
@@ -88,5 +89,7 @@ export default function AdminHome() {
   
     </div>
   
-  </body>
+  </div>
+  )
 }
+     

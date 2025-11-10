@@ -1,38 +1,54 @@
-import { Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { UsersService } from '../users/users.service';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly httpService: HttpService,
-    private readonly usersService: UsersService,
+    private readonly prisma: PrismaService,
+    private readonly jwt: JwtService
   ) {}
 
-  async createUser() {
-    try {
-      const user = {
-        rut_admin: '214277603',
-        nombre: 'Nabil',
-        email: 'default',
-        contraseña: 'hola'
-      }
-      await this.usersService.addUser(user); 
 
-    } catch (error) {
-      console.error('Error al conectar con la DB:', error);
-      throw error;
-    }
+  //función para registrar un admin
+  async register(rut_admin: string, nombre: string, email: string, contraseña: string) {
+    const hash = await bcrypt.hash(contraseña, 10);
+    return this.prisma.administrador.create({
+      data: { rut_admin, nombre, email, contraseña: hash },
+    });
   }
-  // Función de prueba para validar la conexión con la DB
-  async validateUser() {
-    try {
-      const users = await this.usersService.getUsers(); // asume que getUsers() existe
-      console.log('Usuarios desde la DB:', users);
-      return users;
-    } catch (error) {
-      console.error('Error al conectar con la DB:', error);
-      throw error;
-    }
+
+
+  //función para logear un admin.
+  async login(rut_admin: string, contraseña: string) {
+
+    const admin = await this.prisma.administrador.findUnique({
+       where: {
+         rut_admin,
+        },
+      });
+
+    if (!admin) throw new UnauthorizedException('Usuario no encontrado');
+
+    const valido = await bcrypt.compare(contraseña, admin.contraseña);
+    if (!valido) throw new UnauthorizedException('Contraseña incorrecta');
+
+    const payload = { rut: admin.rut_admin,
+      nombre: admin.nombre,
+      email: admin.email 
+    };
+
+    const token = this.jwt.sign(payload);
+
+    return {
+      success: true,
+      token, 
+      admin: {
+              rut: admin.rut_admin,
+              nombre: admin.nombre,
+              email: admin.email 
+        } };
   }
 }
+

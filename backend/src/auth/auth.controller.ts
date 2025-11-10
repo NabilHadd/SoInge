@@ -1,13 +1,23 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
-@Controller('auth') // <--- ruta base
+@Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private auth: AuthService) {}
 
-  @Get('test-db') // <--- endpoint exacto
-  async testDB() {
-    this.authService.createUser()
-    return this.authService.validateUser();
+  @Post('register')
+  async register(@Body() body: any) {
+
+    const rut = body.rut_admin
+    const nombre = body.nombre
+    const email = body.email
+    const contraseña = body.contraseña
+
+    return this.auth.register(rut, nombre, email, contraseña);
+  }
+
+  @Post('login')
+  async login(@Body() body: any) {
+    return this.auth.login(body.rutAdmin, body.password);
   }
 }

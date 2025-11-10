@@ -65,7 +65,7 @@ function Home() {
                 ${[19.99,29.99,39.99,24.99,34.99,44.99,27.99,31.99][num-1]}
               </p>
               <Link
-                 to="./producto"
+                 to="./Producto"
                 className="bg-[#275DAD] text-white p-2 rounded hover:bg-[#5B616A] w-full text-center"
                   >
                   Ver Producto

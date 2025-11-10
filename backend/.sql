@@ -6,7 +6,7 @@ CREATE TABLE administrador (
 );
 
 CREATE TABLE producto (
-  id_producto SERIAL PRIMARY KEY,
+  id_producto SERIAL PRIMARY KEY,y
   nombre VARCHAR(100) NOT NULL,
   descripcion VARCHAR(255) NOT NULL,
   precio DECIMAL(10,2) NOT NULL,
