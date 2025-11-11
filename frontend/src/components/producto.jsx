@@ -4,6 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import ucenin from '../assets/ucenin.png'; // Asegúrate de tener esta imagen en la carpeta assets
 import { Link } from 'react-router-dom';
 function Producto() {
+
+  const navigate = useNavigate()
+
+  navigate('')
   
 
   return (

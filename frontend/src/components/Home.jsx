@@ -1,16 +1,37 @@
 // src/Home.js
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from "react-router-dom";
-import ucenin from '../assets/ucenin.png'; // Asegúrate de tener esta imagen en la carpeta assets
-import logoUCN from '../assets/logo.webp'; // Logo de la UCN
+import React, {useEffect, useState} from 'react';
+import { Spinner} from 'flowbite-react';
+import { useNavigate} from 'react-router-dom';
+import axios from 'axios';
+import logoUCN from '../assets/logo.webp';
+import ProductCard from "./ProductCard";
 
 function Home() {
   const navigate = useNavigate(); // hook para navegación
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+
+
 
   const handleAdminRedirect = () => {
     navigate('/Login'); // ruta a la que quieres ir
   };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/product/all")
+      .then((res) => setProducts(res.data))
+      .catch((err) => console.error("Error al obtener productos:", err))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner size="xl" />
+      </div>
+    );
 
   return (
   
@@ -48,29 +69,8 @@ function Home() {
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
-            <div
-              key={num}
-              className="bg-white rounded-xl shadow-lg p-4 flex flex-col items-center transform hover:scale-105 transition-transform"
-            >
-              <img
-                src={ucenin}
-                alt={`Producto ${num}`}
-                className="rounded-lg mb-4 h-48 object-contain"
-              />
-              <h3 className="font-semibold text-[#275DAD] mb-2 text-center">
-                Producto {num}
-              </h3>
-              <p className="text-[#5B616A] font-bold mb-4">
-                ${[19.99,29.99,39.99,24.99,34.99,44.99,27.99,31.99][num-1]}
-              </p>
-              <Link
-                 to="./Producto"
-                className="bg-[#275DAD] text-white p-2 rounded hover:bg-[#5B616A] w-full text-center"
-                  >
-                  Ver Producto
-                </Link>
-            </div>
+          {products.map((p) => (
+            <ProductCard product={p} />
           ))}
         </div>
       </main>
