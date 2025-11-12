@@ -3,12 +3,12 @@ import { Button } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
 
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, onMostrarProducto}) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [image, setImage] = useState("")
   const [p] = useState(product)
-  const navigate = useNavigate();
+
 
   useEffect(() => {
     if (p) {
@@ -17,11 +17,6 @@ export default function ProductCard({ product }) {
       setImage(p.imagen);
     }
   }, [p]);
-
-  
-  const handleClick = (path) => {
-    navigate(path);
-  };
 
   return (<div
               key={p.id_producto}
@@ -39,7 +34,7 @@ export default function ProductCard({ product }) {
                 {price}
               </p>
               <Button
-                onClick={() => handleClick('/Producto')}
+                onClick={() => onMostrarProducto(p)}
                 color="blue"
                 className="w-full text-center rounded-lg"
               >

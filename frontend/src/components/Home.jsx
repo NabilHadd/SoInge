@@ -5,11 +5,13 @@ import { useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import logoUCN from '../assets/logo.webp';
 import ProductCard from "./ProductCard";
+import Producto from './Producto';
 
 function Home() {
   const navigate = useNavigate(); // hook para navegación
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [producto, setProducto] = useState(null)
   
 
 
@@ -17,6 +19,10 @@ function Home() {
   const handleAdminRedirect = () => {
     navigate('/Login'); // ruta a la que quieres ir
   };
+
+  const handleMostrarProducto = (p) => {
+    setProducto(p)
+  }
 
   useEffect(() => {
     axios
@@ -26,12 +32,18 @@ function Home() {
       .finally(() => setLoading(false));
   }, []);
 
+
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen">
         <Spinner size="xl" />
       </div>
     );
+
+
+  if (producto){
+    return <Producto producto={producto} onMostrarProducto={handleMostrarProducto}/>
+  }
 
   return (
   
@@ -70,7 +82,10 @@ function Home() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products.map((p) => (
-            <ProductCard product={p} />
+            <ProductCard
+              product={p}
+              onMostrarProducto={() => handleMostrarProducto(p)}
+            />
           ))}
         </div>
       </main>

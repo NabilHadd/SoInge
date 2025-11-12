@@ -9,7 +9,12 @@ export class ProductService {
     ) {}
 
 async getAll() {
-  const productos = await this.prisma.producto.findMany();
+  //cambiar el nombre de reseñas a reviews por el tema de la ñ
+  const productos = await this.prisma.producto.findMany({
+    include: {
+      reseñas: true
+    },
+  });
 
   return productos.map((p) => ({
     id_producto: p.id_producto,
@@ -18,6 +23,7 @@ async getAll() {
     precio: p.precio,
     stock: p.stock,
     imagen: Buffer.from(p.imagen).toString("base64"),
+    reviews: p.reseñas
   }));
 }
 
