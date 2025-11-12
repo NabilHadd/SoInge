@@ -11,21 +11,20 @@ function Producto({ producto, onMostrarProducto}) {
 
   const [open, setOpen] = useState(false);
   
-  const handleSubmit = async () => {
+  const handleSubmit = async (review) => {
     setOpen(false)
-    try {
 
-      const res = await axios.post("http://localhost:3001/auth/login", {
-        //debe enviar la review al endpoint correspondiente
+    axios.post('http://localhost:3001/product/review', {
+        id_producto: producto.id_producto,
+        valoracion: review.valoracion,
+        descripcion: review.descripcion
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
       });
-
-      if (res.data.success) {} //lo que sea que tenga que suceder si es success}
-    } catch (err) {
-      //lo que sea que tenga que suceder si sale bien
-      //setMensaje(
-      //  " Error: " + (err.response?.data?.message || err.message)
-      //);
-    }
   }
 
 

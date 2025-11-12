@@ -27,4 +27,18 @@ async getAll() {
   }));
 }
 
+
+async addReview(data){
+  console.log(data)
+  try {
+    await this.prisma.reseñaProducto.create({
+      data: data
+    });
+
+  } catch (error) {
+    throw new Error(error);
+  }
+
+}
+
 }
