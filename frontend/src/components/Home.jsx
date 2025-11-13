@@ -5,7 +5,7 @@ import { useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import logoUCN from '../assets/logo.webp';
 import ProductCard from "./ProductCard";
-import Producto from './Producto';
+import Producto from './producto';
 
 function Home() {
   const navigate = useNavigate(); // hook para navegación

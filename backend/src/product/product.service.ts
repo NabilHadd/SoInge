@@ -7,7 +7,9 @@ export class ProductService {
     constructor(
         private readonly prisma: PrismaService
     ) {}
-
+ async countProducts(): Promise<number> {
+    return this.prisma.producto.count();
+  }
 async getAll() {
   //cambiar el nombre de reseñas a reviews por el tema de la ñ
   const productos = await this.prisma.producto.findMany({
