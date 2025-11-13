@@ -5,11 +5,42 @@ import CantidadInput from './CantidadInput';
 import RatingBox from './RatingBox';
 import ModalLock from './Modal';
 import ReviewForm from './ReviewForm';
+import Footer from './Footer';
+import Header from './Header';
+import Toast from './Toast';
 import axios from 'axios';
 
 function Producto({ producto, onMostrarProducto}) {
 
   const [open, setOpen] = useState(false);
+  const [cantidad, setCantidad] = useState(1);
+  const [mensaje, setMensaje] = useState("");
+
+
+  
+  const handleAgregarAlCarrito = () => {
+    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+    // Buscar si el producto ya está en el carrito
+    const existente = carrito.find((p) => p.id_producto === producto.id_producto);
+
+    if (existente) {
+      existente.cantidad += cantidad;
+    } else {
+      carrito.push({
+        id_producto: producto.id_producto,
+        nombre: producto.nombre,
+        precio: producto.precio,
+        imagen: `data:image/jpg;base64,${producto.imagen}`,
+        cantidad,
+      });
+    }
+
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+    setMensaje(""); // limpia primero
+    setTimeout(() => setMensaje(`Se han agregado ${cantidad} ${producto.nombre} `), 0);
+  };
+
   
   const handleSubmit = async (review) => {
     setOpen(false)
@@ -29,6 +60,8 @@ function Producto({ producto, onMostrarProducto}) {
 
 
   return (
+    <div>
+      <Header/>
     <div className="bg-[#F9FAFB] min-h-screen py-10">
       <div className="max-w-5xl mx-auto p-6 flex flex-col gap-10">
 
@@ -65,11 +98,12 @@ function Producto({ producto, onMostrarProducto}) {
               {producto.descripcion}
             </p>
 
-            <CantidadInput cantidad={producto.stock} />
+            <CantidadInput cantidad={producto.stock} onCantidad={setCantidad} />
 
 
             {/* Botón */}
             <Button
+              onClick={() => handleAgregarAlCarrito()}
               color="blue"
               size="lg"
               className="w-fit font-semibold shadow-md transition-transform hover:scale-105"
@@ -100,7 +134,13 @@ function Producto({ producto, onMostrarProducto}) {
         </ModalLock>
 
       </div>
+        {mensaje && (
+          <Toast message={mensaje} type="success" />
+        )}
     </div>
+      <Footer/>
+    </div>
+
   );
 }
 
