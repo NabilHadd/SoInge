@@ -4,9 +4,12 @@ import { Trash2, Plus, Minus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
+import axios from 'axios'
+
 
 export default function Carrito() {
   const navigate = useNavigate();
+  const [breakStocks, setBreakStocks] = useState([])
 
   const [productos, setProductos] = useState(() => {
     const saved = localStorage.getItem("carrito");
@@ -34,9 +37,21 @@ export default function Carrito() {
     setProductos((prev) => prev.filter((p) => p.id !== id));
   };
 
+  //ARREGLAR EL BOTON DE SUMAR EN EL CARRITO O QUITARLOS NOMAS, ESTA SUMANDO TODOS A LA VEZ.
+  //AGREGAR UN POP UP QUE SE LANCE SI ESQUE BREAKSTOCKS NO ES NULL CON EL (&&)
   const comprarAhora = () => {
     //disminuir de la base de datos los productos.
-    alert("Compra realizada con éxito 🎉");
+    productos.forEach(p => {
+      axios.get(`http://localhost:3001/product/validate-stock?id_producto=${p.id_producto}&push_stock=${p.cantidad}`)
+      .then(function (res){
+        if(!res.data.success) breakStocks.push(res.data.product);
+      })
+      .catch(function(error){
+        console.log(error)
+      })
+    });
+    
+    alert("Compra realizada con éxito");
     localStorage.removeItem("carrito");
     setProductos([]);
   };

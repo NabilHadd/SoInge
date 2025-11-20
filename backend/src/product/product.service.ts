@@ -1,20 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { ProductoRepository } from './producto.repository';
 
 @Injectable()
 export class ProductService {
 
     constructor(
-        private readonly prisma: PrismaService
+        private readonly repo: ProductoRepository
     ) {}
 
 async getAll() {
   //cambiar el nombre de reseñas a reviews por el tema de la ñ
-  const productos = await this.prisma.producto.findMany({
-    include: {
-      reseñas: true
-    },
-  });
+  const productos = await this.repo.getAllProducts();
 
   return productos.map((p) => ({
     id_producto: p.id_producto,
@@ -25,20 +21,37 @@ async getAll() {
     imagen: Buffer.from(p.imagen).toString("base64"),
     reviews: p.reseñas
   }));
+
+}
+
+
+async addReview(
+  data: { 
+  id_producto: number,
+  valoracion: number,
+  descripcion: string})
+  {
+    await this.repo.postReview(data)
+
 }
 
 
-async addReview(data){
-  console.log(data)
-  try {
-    await this.prisma.reseñaProducto.create({
-      data: data
-    });
-
-  } catch (error) {
-    throw new Error(error);
-  }
+async validateStock(id_producto: number, push_stock: number){
+  const pull_stock = await this.repo.getStock(id_producto);
+  const product = await this.repo.getProduct(id_producto);
+  return {product: product, validation:(push_stock <= pull_stock)};
 
 }
+
+
+async reduceStock(id_producto: number, stock_redux: number){
+  const pull_stock = await this.repo.getStock(id_producto);
+  const new_stock = pull_stock - stock_redux;
+  if (new_stock < 0) throw new Error('no se puede almacenar stock negativo');
+
+  await this.repo.updateStock(id_producto, new_stock);
+}
+
+
 
 }
