@@ -8,6 +8,14 @@ export class ProductService {
         private readonly repo: ProductoRepository
     ) {}
 
+
+
+ async getProductNum(){
+    return this.repo.countProducts();
+  }
+
+
+
 async getAll() {
   //cambiar el nombre de reseñas a reviews por el tema de la ñ
   const productos = await this.repo.getAllProducts();

@@ -16,6 +16,14 @@ export class ProductController {
   }
 
 
+  @Get('count')
+  async getCount() {
+    return {
+      count: await this.productService.getProductNum(),
+    };
+  }
+
+  
   @Post('review')
   async addReviewProducto(@Body() body) {
     

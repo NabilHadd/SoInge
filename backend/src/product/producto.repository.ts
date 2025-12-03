@@ -65,4 +65,10 @@ export class ProductoRepository {
         }
     }
 
+    async countProducts(){
+        return this.prisma.producto.count();
+    } 
+
+    
+
 }

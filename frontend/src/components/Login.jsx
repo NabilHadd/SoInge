@@ -1,7 +1,7 @@
 // src/components/Login.js
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import Toast from "./Toast";
 
@@ -95,6 +95,12 @@ function Login() {
           >
             Iniciar sesión
           </button>
+          <p className="text-sm text-gray-600">
+                 ¿No tienes una cuenta?{" "}
+            <Link to="/Register" className="text-blue-600 hover:underline">
+                  Regístrate
+            </Link>
+          </p>
         </form>
       </div>
         {/* Mensaje */}

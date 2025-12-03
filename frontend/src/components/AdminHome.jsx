@@ -1,8 +1,37 @@
 import React from "react";
 import logo1 from '../assets/logo.webp';  
+import { useEffect, useState } from 'react';
+import { getProductCount, getAllProducts } from '../api/products.ts';
+
+
+export function ProductCounter() {
+  const [count, setCount] = useState(null);
+
+
+  useEffect(() => {
+    getProductCount().then(c => setCount(c));
+  }, []);
+
+  if (count === null) return <p>Cargando...</p>;
+
+  return count;
+}
 
 export default function AdminHome() {
+  const [productos, setProductos] = useState([]);
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getAllProducts();
+        setProductos(data);
+      } catch (error) {
+        console.error("Error al obtener productos:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
   return(
     <div class="bg-[#FCF7F8] flex h-screen">
   
@@ -30,7 +59,7 @@ export default function AdminHome() {
    
       <div class="grid grid-cols-3 gap-6 mb-6">
         <div class="bg-gradient-to-r from-[#ABA9C3] to-[#CED3DC] p-4 rounded-xl shadow-lg text-white font-semibold transform hover:scale-105 transition-transform">
-          Total Productos: 120
+          Total Productos: <ProductCounter />
         </div>
         <div class="bg-gradient-to-r from-[#275DAD] to-[#5B616A] p-4 rounded-xl shadow-lg text-white font-semibold transform hover:scale-105 transition-transform">
           Ingresos Hoy: $2,500
@@ -41,41 +70,35 @@ export default function AdminHome() {
       </div>
   
   
-      <div class="bg-[#CED3DC] p-4 rounded-xl shadow-lg mb-6 overflow-auto">
-        <h2 class="text-2xl font-extrabold bg-gradient-to-r from-[#275DAD] via-[#ABA9C3] to-[#5B616A] bg-clip-text text-transparent drop-shadow-md mb-4">
-          Inventario
-        </h2>
-        <table class="min-w-full bg-white rounded-xl overflow-hidden">
-          <thead class="bg-[#ABA9C3] text-white">
-            <tr>
-              <th class="py-2 px-4 text-left">Producto</th>
-              <th class="py-2 px-4 text-left">Stock</th>
-              <th class="py-2 px-4 text-left">Precio</th>
-              <th class="py-2 px-4 text-left">Categoría</th>
+    <div className="bg-[#CED3DC] p-4 rounded-xl shadow-lg mb-6 overflow-auto">
+      <h2 className="text-2xl font-extrabold bg-gradient-to-r from-[#275DAD] via-[#ABA9C3] to-[#5B616A] bg-clip-text text-transparent drop-shadow-md mb-4">
+        Inventario
+      </h2>
+      <table className="min-w-full bg-white rounded-xl overflow-hidden">
+        <thead className="bg-[#ABA9C3] text-white">
+          <tr>
+            <th className="py-2 px-4 text-left">Producto</th>
+            <th className="py-2 px-4 text-left">Stock</th>
+            <th className="py-2 px-4 text-left">Precio</th>
+            <th className="py-2 px-4 text-left">Descripcion</th>
+          </tr>
+        </thead>
+        <tbody>
+          {productos.map((producto, index) => (
+            <tr
+              key={producto.id}
+              className={`border-b ${index % 2 === 0 ? "" : "bg-gray-50"} hover:bg-[#FCF7F8] transition-colors`}
+            >
+              <td className="py-2 px-4">{producto.nombre}</td>
+              <td className="py-2 px-4">{producto.stock}</td>
+              <td className="py-2 px-4">${producto.precio}</td>
+              <td className="py-2 px-4">{producto.descripcion}</td>
             </tr>
-          </thead>
-          <tbody>
-            <tr class="border-b hover:bg-[#FCF7F8] transition-colors">
-              <td class="py-2 px-4">Producto A</td>
-              <td class="py-2 px-4">50</td>
-              <td class="py-2 px-4">$15</td>
-              <td class="py-2 px-4">Categoría 1</td>
-            </tr>
-            <tr class="border-b bg-gray-50 hover:bg-[#FCF7F8] transition-colors">
-              <td class="py-2 px-4">Producto B</td>
-              <td class="py-2 px-4">30</td>
-              <td class="py-2 px-4">$25</td>
-              <td class="py-2 px-4">Categoría 2</td>
-            </tr>
-            <tr class="border-b hover:bg-[#FCF7F8] transition-colors">
-              <td class="py-2 px-4">Producto C</td>
-              <td class="py-2 px-4">40</td>
-              <td class="py-2 px-4">$10</td>
-              <td class="py-2 px-4">Categoría 1</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
   
     
       <div class="bg-[#CED3DC] p-4 rounded-xl shadow-lg">
@@ -90,6 +113,6 @@ export default function AdminHome() {
     </div>
   
   </div>
-  )
+  );
 }
      
