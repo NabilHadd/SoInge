@@ -137,8 +137,8 @@ export default function AdminHome() {
       <aside className="w-64 bg-[#CED3DC] p-6 flex flex-col">
         <img src={logo1} alt="logo" className="w-[100px] h-[104px] mb-6 mx-auto" />
         <nav className="flex flex-col gap-4 mt-4">
-          <Link to="/AdminHome" className="text-[#275DAD] font-semibold hover:text-[#5B616A] transition-colors">Dashboard</Link>
-          <Link to="/Inventario" className="text-[#5B616A] hover:text-[#275DAD] transition-colors">Inventario</Link>
+          <Link to="/AdminHome" className="text-[#5B616A] hover:text-[#275DAD] transition-colors">Dashboard</Link>
+          <Link to="/Inventario" className="text-[#275DAD] font-semibold hover:text-[#5B616A] transition-colors">Inventario</Link>
           <Link to="/Ventas" className="text-[#5B616A] hover:text-[#275DAD] transition-colors">Ventas</Link>
           <Link to="/Usuarios" className="text-[#5B616A] hover:text-[#275DAD] transition-colors">Usuarios</Link>
           <Link to="/Configuracion" className="text-[#5B616A] hover:text-[#275DAD] transition-colors">Configuración</Link>
