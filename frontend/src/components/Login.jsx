@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate,Link } from "react-router-dom";
 import logo from "../assets/logo.png";
-import Toast from "./Toast";
+import Toast from "./Utils/Toast";
+import { useApi } from "../hooks/useApi";
 
 
 
@@ -13,6 +14,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [mensaje, setMensaje] = useState("");
   const navigate = useNavigate();
+  const {getBaseUrl} = useApi();
 
 
   const handleSubmit = async (e) => {
@@ -20,7 +22,7 @@ function Login() {
     console.log(rutAdmin, password)
     try {
 
-      const res = await axios.post("http://localhost:3001/auth/login", {
+      const res = await axios.post(`${getBaseUrl()}/auth/login`, {
         rutAdmin,
         password,
       });

@@ -4,11 +4,12 @@ import { Spinner } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import Header from "./Header";
-import Footer from "./Footer";
+import Header from "./Utils/Header";
+import Footer from "./Utils/Footer";
 import ProductCard from "./ProductCard";
 import Producto from "./Producto";
-import SpinnerModern from "./SpinnerModern";
+import SpinnerModern from "./Utils/SpinnerModern";
+import { useApi } from "../hooks/useApi";
 
 function Home() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const {getBaseUrl} = useApi();
 
   // Redirigir al admin
   const handleAdminRedirect = () => navigate("/Login");
@@ -26,7 +28,7 @@ function Home() {
   // Refrescar datos de un producto
   const refreshProduct = async (id) => {
     try {
-      const { data } = await axios.get(`http://localhost:3001/product/byId/${id}`);
+      const { data } = await axios.get(`${getBaseUrl()}/product/byId/${id}`);
       setSelectedProduct(data);
     } catch (err) {
       console.error("Error al refrescar producto:", err);
@@ -36,7 +38,7 @@ function Home() {
   // Cargar todos los productos
   useEffect(() => {
     axios
-      .get("http://localhost:3001/product/all")
+      .get(`${getBaseUrl()}/product/all`)
       .then((res) => setProducts(res.data))
       .catch((err) => console.error("Error al obtener productos:", err))
       .finally(() => setLoading(false));

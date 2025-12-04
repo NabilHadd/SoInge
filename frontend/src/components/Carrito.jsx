@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Button, Spinner } from "flowbite-react";
+import { Button } from "flowbite-react";
 import { Trash2} from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import Header from "./Header";
-import Footer from "./Footer";
+import Header from "./Utils/Header";
+import Footer from "./Utils/Footer";
 import axios from 'axios'
-import CantidadInput from "./CantidadInput";
-import ModalLock from './Modal';
-import CompraForm from "./CompraForm";
-import Toast from "./Toast";
-import SpinnerModern from "./SpinnerModern";
+import CantidadInput from "./Utils/CantidadInput";
+import ModalLock from './Utils/Modal';
+import CompraForm from "./Utils/CompraForm";
+import Toast from "./Utils/Toast";
+import SpinnerModern from "./Utils/SpinnerModern";
+import { useApi } from "../hooks/useApi";
 
 
 export default function Carrito() {
   const navigate = useNavigate();
-  const [breakStocks, setBreakStocks] = useState([]);
   const [compraForm, setCompraForm] =  useState(false);
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState('');  
+  const {getBaseUrl} = useApi();
 
   const [productos, setProductos] = useState(() => {
     const saved = localStorage.getItem("carrito");
@@ -88,7 +89,7 @@ export default function Carrito() {
     try {
       await Promise.all(
         productos.map(p =>
-          axios.post("http://localhost:3001/product/stock-reduce", {
+          axios.post(`${getBaseUrl()}/product/stock-reduce`, {
             id_producto: p.id_producto,
             stock_redux: p.cantidad,
           })
@@ -108,7 +109,7 @@ export default function Carrito() {
     }
 
     
-    await axios.post("http://localhost:3001/mail/send", body)
+    await axios.post(`${getBaseUrl()}/mail/send`, body)
     .then(response => {
       setMsg('Compra realizada con exito, revisa tu correo.');
       setType('success')

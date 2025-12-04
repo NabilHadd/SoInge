@@ -1,13 +1,14 @@
 // src/Home.js
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import { Button } from "flowbite-react";
-import CantidadInput from './CantidadInput';
+import CantidadInput from './Utils/CantidadInput';
 import RatingBox from './RatingBox';
-import ModalLock from './Modal';
-import ReviewForm from './ReviewForm';
-import Footer from './Footer';
-import Header from './Header';
-import Toast from './Toast';
+import ModalLock from './Utils/Modal';
+import ReviewForm from './Utils/ReviewForm';
+import Footer from './Utils/Footer';
+import Header from './Utils/Header';
+import Toast from './Utils/Toast';
+import { useApi } from '../hooks/useApi';
 import axios from 'axios';
 
 function Producto({ producto, onMostrarProducto, refreshProduct}) {
@@ -15,7 +16,7 @@ function Producto({ producto, onMostrarProducto, refreshProduct}) {
   const [openForm, setOpenForm] = useState(false);
   const [cantidad, setCantidad] = useState(1);
   const [mensaje, setMensaje] = useState("");
-
+  const {getBaseUrl} = useApi();
   
   const handleAgregarAlCarrito = () => {
     const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
@@ -45,7 +46,7 @@ function Producto({ producto, onMostrarProducto, refreshProduct}) {
   const handleSubmit = async (review) => {
     setOpenForm(false)
 
-    await axios.post('http://localhost:3001/product/review', {
+    await axios.post(`${getBaseUrl()}/product/review`, {
         id_producto: producto.id_producto,
         valoracion: review.valoracion,
         descripcion: review.descripcion
