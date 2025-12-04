@@ -28,6 +28,7 @@ function Producto({ producto, onMostrarProducto, refreshProduct}) {
     } else {
       carrito.push({
         id_producto: producto.id_producto,
+        stock: producto.stock,
         nombre: producto.nombre,
         precio: producto.precio,
         imagen: `data:image/jpg;base64,${producto.imagen}`,
@@ -100,7 +101,7 @@ function Producto({ producto, onMostrarProducto, refreshProduct}) {
               {producto.descripcion}
             </p>
 
-            <CantidadInput cantidad={producto.stock} onCantidad={setCantidad} />
+            <CantidadInput maxCantidad={producto.stock} onCantidad={setCantidad} cantidad={1}/>
 
 
             {/* Botón */}

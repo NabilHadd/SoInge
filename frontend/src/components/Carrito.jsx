@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "flowbite-react";
+import { Button, Spinner } from "flowbite-react";
 import { Trash2, Plus, Minus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 import axios from 'axios'
+import CantidadInput from "./CantidadInput";
+import ModalLock from './Modal';
+import CompraForm from "./CompraForm";
+import Toast from "./Toast";
 
 
 export default function Carrito() {
   const navigate = useNavigate();
-  const [breakStocks, setBreakStocks] = useState([])
+  const [breakStocks, setBreakStocks] = useState([]);
+  const [compraForm, setCompraForm] =  useState(false);
+  const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [type, setType] = useState('');  
 
   const [productos, setProductos] = useState(() => {
     const saved = localStorage.getItem("carrito");
-    return JSON.parse(saved)
+    return saved ? JSON.parse(saved): [];
   });
 
   useEffect(() => {
@@ -23,12 +31,34 @@ export default function Carrito() {
 
   const total = productos.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
 
-  const actualizarCantidad = (id, delta) => {
+  const actualizarCantidad = (id, nuevaCantidad) => {
     setProductos((prev) =>
       prev.map((p) =>
-        p.id === id ? { ...p, cantidad: Math.max(1, p.cantidad + delta) } : p
+        p.id_producto === id ? { ...p, cantidad: nuevaCantidad } : p
       )
     );
+  };
+
+  const handleSubmit = (form) => {
+    setLoading(true);
+    axios.post("http://localhost:3001/mail/send", {
+      to: form.email,
+      subject: "Confirmación de compra",
+      text: "Gracias por tu compra! Te contactaremos pronto."
+    })
+    .then(response => {
+      setMsg('Compra realizada con exito, revisa tu correo.');
+      setType('success')
+    })
+    .catch(error => {
+      setMsg("Error al enviar correo:", error.response?.data || error);
+      setType('error')
+    })
+    .finally(() => setLoading(false));
+
+    setCompraForm(false);
+    localStorage.removeItem("carrito");
+    setProductos([]);
   };
 
 
@@ -52,9 +82,24 @@ export default function Carrito() {
     });
     
     alert("Compra realizada con éxito");
-    localStorage.removeItem("carrito");
-    setProductos([]);
+
   };
+
+// arriba del componente: import { Spinner } from 'flowbite-react';
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#F9FAFB]">
+        <div className="flex flex-col items-center gap-3">
+          <Spinner aria-label="Loading" size="xl" />
+          <span className="text-gray-600 text-sm">Cargando, por favor espera...</span>
+        </div>
+      </div>
+    );
+  }
+
+
+
 
   return (
 
@@ -92,24 +137,11 @@ export default function Carrito() {
                     </div>
 
                     <div className="flex items-center gap-4">
-                    {/* Botones de cantidad */}
-                    <div className="flex items-center border rounded-lg">
-                        <Button
-                        color="gray"
-                        size="xs"
-                        onClick={() => actualizarCantidad(p.id, -1)}
-                        >
-                        <Minus size={16} />
-                        </Button>
-                        <span className="px-3">{p.cantidad}</span>
-                        <Button
-                        color="gray"
-                        size="xs"
-                        onClick={() => actualizarCantidad(p.id, 1)}
-                        >
-                        <Plus size={16} />
-                        </Button>
-                    </div>
+
+
+
+                    <CantidadInput maxCantidad={p.stock} cantidad={p.cantidad} onCantidad={actualizarCantidad} id={p.id_producto}/>
+
 
                     {/* Eliminar */}
                     <Button
@@ -133,18 +165,26 @@ export default function Carrito() {
                 </h3>
 
                 <div className="flex gap-3 mt-4">
-                <Button color="gray" onClick={() => navigate("/catalogo")}>
+                <Button color="gray" onClick={() => navigate("/")}>
                     Seguir comprando
                 </Button>
 
-                <Button color="blue" onClick={comprarAhora}>
+                <Button color="blue" onClick={() => setCompraForm(true)}>
                     Comprar ahora
                 </Button>
+
+                <ModalLock isOpen={compraForm}>
+                  <CompraForm onCancel={setCompraForm} onSubmit={handleSubmit}/>
+                </ModalLock>
+
                 </div>
             </div>
             )}
         </div>
         </div>
+                {msg && (
+                    <Toast message={msg} type="success" />
+                )}
         <Footer/>
         </div>
   );

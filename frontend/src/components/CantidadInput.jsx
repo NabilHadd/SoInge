@@ -1,11 +1,12 @@
 import React from "react";
 import { TextInput } from "flowbite-react";
 
-export default function CantidadInput({ cantidad, onCantidad }) {
+export default function CantidadInput({ maxCantidad, onCantidad, cantidad, id}) {
+
   const handleChange = (e) => {
     const value = Number(e.target.value);
-    if (value >= 1 && value <= cantidad) {
-      onCantidad?.(value); // Llama a la función si existe
+    if (value >= 1 && value <= maxCantidad) {
+      id? onCantidad(id, value) : onCantidad(value)
     }
   };
 
@@ -15,8 +16,8 @@ export default function CantidadInput({ cantidad, onCantidad }) {
       <TextInput
         type="number"
         min={1}
-        max={cantidad}
-        defaultValue={1}
+        max={maxCantidad}
+        defaultValue={cantidad}
         sizing="md"
         className="w-24"
         onChange={handleChange}
