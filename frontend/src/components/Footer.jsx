@@ -27,7 +27,7 @@ export default function Footer() {
             <h3 className="text-2xl font-bold text-white mb-3 tracking-wide">
               Contacto
             </h3>
-            <p className="text-gray-400">Correo: contacto@ucncositas.cl</p>
+            <p className="text-gray-400">Correo: ucncositas@gmail.com</p>
             <p className="text-gray-400">Tel: +56 9 1234 5678</p>
           </div>
         </div>
