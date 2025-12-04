@@ -7,6 +7,10 @@ COPY package*.json ./
 
 RUN npm ci
 
+RUN apk update && \
+    apk add --no-cache python3 py3-pip && \
+    ln -sf python3 /usr/bin/python
+
 COPY . .
 
 RUN npx prisma generate
