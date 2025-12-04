@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ProductoRepository } from './producto.repository';
+import { BadRequestException } from '@nestjs/common';
 
 @Injectable()
 export class ProductService {
@@ -53,20 +54,20 @@ async addReview(
 }
 
 
-async validateStock(id_producto: number, push_stock: number){
-  const pull_stock = await this.repo.getStock(id_producto);
-  const product = await this.repo.getProduct(id_producto);
-  return {product: product, validation:(push_stock <= pull_stock)};
 
-}
-
-
+//metodo para reducir stock por compra.
 async reduceStock(id_producto: number, stock_redux: number){
   const pull_stock = await this.repo.getStock(id_producto);
+  const product = await this.getById(id_producto);
   const new_stock = pull_stock - stock_redux;
-  if (new_stock < 0) throw new Error('no se puede almacenar stock negativo');
+  if (new_stock < 0) throw new BadRequestException(`No se realizo la compra, no hay suficientes: ${product.nombre}`);
 
   await this.repo.updateStock(id_producto, new_stock);
+}
+
+//metodo para actualizar stock (algo mas administrativo)
+async updateStock(id_producto: number, push_stock: number){
+  await this.repo.updateStock(id_producto, push_stock);
 }
 
 async getById(id: number){

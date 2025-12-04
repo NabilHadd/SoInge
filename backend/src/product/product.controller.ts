@@ -15,13 +15,7 @@ export class ProductController {
   async getAllProducts() {
     return this.productService.getAll();
   }
-
-  @Get('validate-stock')
-  async validateStock(@Query('id_producto') id_producto: string, @Query('push_stock') push_stock: string) {
-    return this.productService.validateStock(Number(id_producto), Number(push_stock));
-  }
-
-
+  
   @Get('count')
   async getCount() {
     return {
@@ -44,9 +38,11 @@ export class ProductController {
 
   @Post('stock-reduce')
   async stockReduce(@Body() body) {
+
     const id_producto = body.id_producto;
     const stock_redux = body.stock_redux;
-    return this.productService.reduceStock(id_producto, stock_redux);
+    
+    return await this.productService.reduceStock(id_producto, stock_redux);
   }
 
   @Put('update')

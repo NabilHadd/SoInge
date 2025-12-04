@@ -1,39 +1,39 @@
 // src/Home.js
-import React, {useEffect, useState} from 'react';
-import { Spinner, Button} from 'flowbite-react';
-import { useNavigate} from 'react-router-dom';
-import axios from 'axios';
-import logoUCN from '../assets/logo.webp';
+import React, { useEffect, useState } from "react";
+import { Spinner } from "flowbite-react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+import Header from "./Header";
+import Footer from "./Footer";
 import ProductCard from "./ProductCard";
-import Producto from './Producto';
-import Footer from './Footer';
-import Header from './Header';
+import Producto from "./Producto";
+import SpinnerModern from "./SpinnerModern";
 
 function Home() {
-  const navigate = useNavigate(); // hook para navegación
+  const navigate = useNavigate();
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [producto, setProducto] = useState(null)
-  
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
+  // Redirigir al admin
+  const handleAdminRedirect = () => navigate("/Login");
 
+  // Mostrar producto individual
+  const handleMostrarProducto = (product) => setSelectedProduct(product);
 
-  const handleAdminRedirect = () => {
-    navigate('/Login'); // ruta a la que quieres ir
-  };
-  
+  // Refrescar datos de un producto
   const refreshProduct = async (id) => {
-    console.log('hola')
-    const { data } = await axios.get(`http://localhost:3001/product/byId/${id}`);
-    setProducto(data)
-    console.log(data)
-    console.log(producto)
+    try {
+      const { data } = await axios.get(`http://localhost:3001/product/byId/${id}`);
+      setSelectedProduct(data);
+    } catch (err) {
+      console.error("Error al refrescar producto:", err);
+    }
   };
 
-  const handleMostrarProducto = (p) => {
-    setProducto(p)
-  }
-
+  // Cargar todos los productos
   useEffect(() => {
     axios
       .get("http://localhost:3001/product/all")
@@ -42,46 +42,49 @@ function Home() {
       .finally(() => setLoading(false));
   }, []);
 
+  // Loading
+  if (loading) return <SpinnerModern fullScreen size={80} />
 
-  if (loading)
+  // Vista de producto individual
+  if (selectedProduct) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <Spinner size="xl" />
-      </div>
+      <Producto
+        producto={selectedProduct}
+        onMostrarProducto={handleMostrarProducto}
+        refreshProduct={refreshProduct}
+      />
     );
-
-
-  if (producto){
-    return <Producto producto={producto} onMostrarProducto={handleMostrarProducto} refreshProduct ={refreshProduct}/>
   }
 
+  // Vista catálogo
   return (
-  
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <Header />
 
-     <div className="bg-[#FCF7F8] flex flex-col min-h-screen">
-      <Header></Header>
-      {/* Contenedor de catálogo */}
-      <main className="flex-1 max-w-6xl mx-auto p-6">
-
-        <h2 className="text-3xl font-extrabold bg-gradient-to-r from-[#275DAD] via-[#ABA9C3] to-[#5B616A] bg-clip-text text-transparent drop-shadow-md mb-6">
-          Productos Destacados
+      <main className="flex-1 max-w-7xl mx-auto px-6 py-10">
+        <h2 className="text-4xl font-extrabold text-center text-gray-900 mb-10 tracking-tight">
+          Productos
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((p) => (
-            <ProductCard
-              product={p}
-              onMostrarProducto={() => handleMostrarProducto(p)}
-            />
-          ))}
-        </div>
+
+        {products.length === 0 ? (
+          <p className="text-center text-gray-500 mt-10">No hay productos disponibles.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {products.map((p) => (
+              <ProductCard
+                key={p.id_producto}
+                product={p}
+                onMostrarProducto={() => handleMostrarProducto(p)}
+              />
+            ))}
+          </div>
+        )}
       </main>
 
-      <Footer/>
-
+      <Footer />
     </div>
   );
 }
-
 
 export default Home;
