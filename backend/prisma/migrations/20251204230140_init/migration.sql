@@ -1,0 +1,11 @@
+/*
+  Warnings:
+
+  - The primary key for the `DetalleCompra` table will be changed. If it partially fails, the table could be left without primary key constraint.
+  - You are about to drop the column `id_detalle` on the `DetalleCompra` table. All the data in the column will be lost.
+
+*/
+-- AlterTable
+ALTER TABLE "DetalleCompra" DROP CONSTRAINT "DetalleCompra_pkey",
+DROP COLUMN "id_detalle",
+ADD CONSTRAINT "DetalleCompra_pkey" PRIMARY KEY ("id_compra", "id_producto");

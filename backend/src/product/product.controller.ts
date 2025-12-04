@@ -45,6 +45,18 @@ export class ProductController {
     return await this.productService.reduceStock(id_producto, stock_redux);
   }
 
+  @Post('log-stock')
+  async logStock(@Body() body) {
+
+    const id_producto = body.id_producto;
+    const variacion = body.variacion;
+    const descripcion =  body.descripcion;
+    
+    return await this.productService.logHistorialStock(id_producto, variacion, descripcion);
+  }
+
+
+
   @Put('update')
   async updateProduct(@Body() body) {
     return this.productService.updateProduct(body);

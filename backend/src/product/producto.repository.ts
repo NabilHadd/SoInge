@@ -114,6 +114,24 @@ export class ProductoRepository {
             throw new Error(error)
         } 
     }
+
+    async logStock(
+        body: {
+            id_producto: number,
+            variacion: number,
+            descripcion: string
+        })
+    {
+        try {
+            await this.prisma.historialStock.create({
+            data: body,
+        });
+        } catch (error) {
+            throw new Error(error);
+            
+        }
+    }
+
     async deleteProduct(id_producto: number){
         try {
             await this.prisma.producto.delete({

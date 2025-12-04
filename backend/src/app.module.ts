@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaService } from './prisma/prisma.service';
 import { ProductModule } from './product/product.module';
 import { MailModule } from './mail/mail.module';
+import { CompraModule } from './compra/compra.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { MailModule } from './mail/mail.module';
     UsersModule,
     AuthModule,
     ProductModule,
-    MailModule
+    MailModule,
+    CompraModule
   ],
   providers: [PrismaService],
 })
