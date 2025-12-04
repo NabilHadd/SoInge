@@ -31,7 +31,16 @@ async getAll() {
   }));
 
 }
-
+async createProduct(data: { nombre: string, descripcion: string, precio: number, stock: number, imagen: string}) {
+  const imagenBuffer = Buffer.from(data.imagen, 'base64'); 
+  await this.repo.postProduct({
+    nombre: data.nombre,
+    descripcion: data.descripcion,
+    precio: data.precio,
+    stock: data.stock,
+    imagen: imagenBuffer
+  });
+}
 
 async addReview(
   data: { 

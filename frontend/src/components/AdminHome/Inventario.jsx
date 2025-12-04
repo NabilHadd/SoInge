@@ -1,7 +1,7 @@
 import React from "react";
-import logo1 from '../assets/logo.webp';  
+import logo1 from '../../assets/logo.webp';  
 import { useEffect, useState } from 'react';
-import { getProductCount, getAllProducts } from '../api/products.ts';
+import { getProductCount, getAllProducts } from '../../api/products.ts';
 
 
 export function ProductCounter() {

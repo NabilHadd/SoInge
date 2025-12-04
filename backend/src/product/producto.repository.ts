@@ -17,6 +17,17 @@ export class ProductoRepository {
 
         return products ? products : []
     }
+    async postProduct(data) {
+    try {
+        const nuevo = await this.prisma.producto.create({
+        data: data
+        });
+        return nuevo; // devuelve el producto creado
+    } catch (error) {
+        throw new Error(error);
+    }
+    }
+
 
     async postReview(data){
         try {

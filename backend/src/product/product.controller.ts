@@ -28,6 +28,10 @@ export class ProductController {
       count: await this.productService.getProductNum(),
     };
   }
+  @Post('create')
+  async createProduct(@Body() body) {
+    return this.productService.createProduct(body);
+  }
 
   
   @Post('review')
@@ -35,6 +39,7 @@ export class ProductController {
     
     return this.productService.addReview(body);
   }
+
 
   @Post('stock-reduce')
   async stockReduce(@Body() body) {
