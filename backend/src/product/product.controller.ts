@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, Param} from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Param, Put, Delete} from '@nestjs/common';
 import { ProductService } from './product.service';
 
 @Controller('product')
@@ -15,19 +15,14 @@ export class ProductController {
   async getAllProducts() {
     return this.productService.getAll();
   }
-
-  @Get('validate-stock')
-  async validateStock(@Query('id_producto') id_producto: string, @Query('push_stock') push_stock: string) {
-    return this.productService.validateStock(Number(id_producto), Number(push_stock));
-  }
-
-
+  
   @Get('count')
   async getCount() {
     return {
       count: await this.productService.getProductNum(),
     };
   }
+  
   @Post('create')
   async createProduct(@Body() body) {
     return this.productService.createProduct(body);
@@ -43,10 +38,20 @@ export class ProductController {
 
   @Post('stock-reduce')
   async stockReduce(@Body() body) {
+
     const id_producto = body.id_producto;
     const stock_redux = body.stock_redux;
-    return this.productService.reduceStock(id_producto, stock_redux);
+    
+    return await this.productService.reduceStock(id_producto, stock_redux);
   }
 
+  @Put('update')
+  async updateProduct(@Body() body) {
+    return this.productService.updateProduct(body);
+  }
+  @Delete('delete/:id_producto')
+  async deleteProduct(@Param('id_producto') id_producto: string) {
+    return this.productService.deleteProduct(Number(id_producto));
+  }
 
 }

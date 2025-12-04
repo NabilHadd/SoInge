@@ -1,9 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import {useApi} from '../hooks/useApi'
 
 function Register() {
   const navigate = useNavigate();
+  const {getBaseUrl} = useApi();
   const [formData, setFormData] = useState({
     rut_admin: "",
     nombre: "",
@@ -21,7 +23,8 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3001/administradores/register", formData);
+      //esto esta malo.
+      await axios.post(`${getBaseUrl()}/administradores/register`, formData);
       alert("Administrador registrado correctamente");
       navigate("/login");
     } catch (error) {

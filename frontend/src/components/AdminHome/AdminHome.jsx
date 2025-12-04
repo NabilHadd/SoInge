@@ -41,11 +41,11 @@ export default function AdminHome() {
     <aside class="w-64 bg-[#CED3DC] p-6 flex flex-col">
       <img src={logo1} alt="logo" className="w-[100px] h-[104px] mb-6 mx-auto" />
       <nav class="flex flex-col gap-4 mt-4">
-        <Link to="./" class="text-[#275DAD] font-semibold hover:text-[#5B616A] transition-colors">Dashboard</Link>
-        <Link to="./Inventario" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Inventario</Link>
-        <Link to="./Ventas" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Ventas</Link>
-        <Link to="./Usuarios" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Usuarios</Link>
-        <Link to="./Configuracion" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Configuración</Link>
+        <Link to="/AdminHome" class="text-[#275DAD] font-semibold hover:text-[#5B616A] transition-colors">Dashboard</Link>
+        <Link to="/Inventario" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Inventario</Link>
+        <Link to="/Ventas" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Ventas</Link>
+        <Link to="/Usuarios" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Usuarios</Link>
+        <Link to="/Configuracion" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Configuración</Link>
       </nav>
     </aside>
   

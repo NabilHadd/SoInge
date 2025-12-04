@@ -1,13 +1,14 @@
 // src/Home.js
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import { Button } from "flowbite-react";
-import CantidadInput from './CantidadInput';
+import CantidadInput from './Utils/CantidadInput';
 import RatingBox from './RatingBox';
-import ModalLock from './Modal';
-import ReviewForm from './ReviewForm';
-import Footer from './Footer';
-import Header from './Header';
-import Toast from './Toast';
+import ModalLock from './Utils/Modal';
+import ReviewForm from './Utils/ReviewForm';
+import Footer from './Utils/Footer';
+import Header from './Utils/Header';
+import Toast from './Utils/Toast';
+import { useApi } from '../hooks/useApi';
 import axios from 'axios';
 
 function Producto({ producto, onMostrarProducto, refreshProduct}) {
@@ -15,6 +16,25 @@ function Producto({ producto, onMostrarProducto, refreshProduct}) {
   const [openForm, setOpenForm] = useState(false);
   const [cantidad, setCantidad] = useState(1);
   const [mensaje, setMensaje] = useState("");
+  const {getBaseUrl} = useApi();
+
+  const formatText = (text)=> {
+    if (!text) return "";
+
+    // Reemplaza guiones bajos por espacios
+    const withSpaces = text.replace(/_/g, " ");
+
+    // Convierte cada palabra a mayúscula inicial
+    const formatted = withSpaces.replace(/\b\w/g, (char) => char.toUpperCase());
+
+    return formatted;
+  };
+
+  const formatPrice = (price) => {
+    if (price == null) return "$0";
+    return `$${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+  };
+
 
   
   const handleAgregarAlCarrito = () => {
@@ -45,7 +65,7 @@ function Producto({ producto, onMostrarProducto, refreshProduct}) {
   const handleSubmit = async (review) => {
     setOpenForm(false)
 
-    await axios.post('http://localhost:3001/product/review', {
+    await axios.post(`${getBaseUrl()}/product/review`, {
         id_producto: producto.id_producto,
         valoracion: review.valoracion,
         descripcion: review.descripcion
@@ -90,29 +110,40 @@ function Producto({ producto, onMostrarProducto, refreshProduct}) {
           {/* Detalles */}
           <div className="flex-1 flex flex-col gap-6">
             <h1 className="text-4xl font-bold text-gray-800">
-              {producto.nombre}
+              {formatText(producto.nombre)}
             </h1>
 
             <p className="text-2xl font-semibold text-[#275DAD]">
-              {producto.precio}
+              {formatPrice(producto.precio)}
             </p>
 
             <p className="text-gray-600 leading-relaxed">
               {producto.descripcion}
             </p>
 
-            <CantidadInput maxCantidad={producto.stock} onCantidad={setCantidad} cantidad={1}/>
+            {producto.stock > 0 ? (
+              <>
+                <CantidadInput maxCantidad={producto.stock} onCantidad={setCantidad} cantidad={1}/>
 
 
-            {/* Botón */}
-            <Button
-              onClick={() => handleAgregarAlCarrito()}
-              color="blue"
-              size="lg"
-              className="w-fit font-semibold shadow-md transition-transform hover:scale-105"
-            >
-              🛒 Agregar al carrito
-            </Button>
+                {/* Botón */}
+                <Button
+                  onClick={() => handleAgregarAlCarrito()}
+                  color="blue"
+                  size="lg"
+                  className="w-fit font-semibold shadow-md transition-transform hover:scale-105"
+                >
+                  🛒 Agregar al carrito
+                </Button>
+              </>
+              
+            ) : (
+
+              <p>No hay stock disponible.</p>
+
+            )}
+
+
 
           </div>
         </div>

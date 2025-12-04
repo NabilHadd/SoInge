@@ -1,28 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { Button, Spinner } from "flowbite-react";
-import { Trash2, Plus, Minus } from "lucide-react";
+import { Button } from "flowbite-react";
+import { Trash2} from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import Header from "./Header";
-import Footer from "./Footer";
+import Header from "./Utils/Header";
+import Footer from "./Utils/Footer";
 import axios from 'axios'
-import CantidadInput from "./CantidadInput";
-import ModalLock from './Modal';
-import CompraForm from "./CompraForm";
-import Toast from "./Toast";
+import CantidadInput from "./Utils/CantidadInput";
+import ModalLock from './Utils/Modal';
+import CompraForm from "./Utils/CompraForm";
+import Toast from "./Utils/Toast";
+import SpinnerModern from "./Utils/SpinnerModern";
+import { useApi } from "../hooks/useApi";
 
 
 export default function Carrito() {
   const navigate = useNavigate();
-  const [breakStocks, setBreakStocks] = useState([]);
   const [compraForm, setCompraForm] =  useState(false);
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [type, setType] = useState('');  
+  const {getBaseUrl} = useApi();
 
   const [productos, setProductos] = useState(() => {
     const saved = localStorage.getItem("carrito");
     return saved ? JSON.parse(saved): [];
   });
+
+  const formatText = (text)=> {
+    if (!text) return "";
+
+    // Reemplaza guiones bajos por espacios
+    const withSpaces = text.replace(/_/g, " ");
+
+    // Convierte cada palabra a mayúscula inicial
+    const formatted = withSpaces.replace(/\b\w/g, (char) => char.toUpperCase());
+
+    return formatted;
+  };
+
+  const formatPrice = (price) => {
+    if (price == null) return "$0";
+    return `$${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+  };
+
 
   useEffect(() => {
     localStorage.setItem("carrito", JSON.stringify(productos));
@@ -39,13 +59,75 @@ export default function Carrito() {
     );
   };
 
-  const handleSubmit = (form) => {
+  const generarCuerpo = (name) => {
+    const lista = productos
+      .map(
+        (p) =>
+          `• ${p.nombre}\n\t\tCantidad: ${p.cantidad}\n\t\tSubtotal: ${formatPrice(p.precio * p.cantidad)}`
+      )
+      .join("\n\n\t");
+
+    const cantidad_total = productos.reduce((acc, p) => acc + p.cantidad, 0);
+    const total_compra = productos.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
+
+    const texto = `
+        Hola ${name},
+
+        ¡Gracias por tu compra en UCN Cositas!
+
+        Aquí tienes el resumen de tu pedido:
+
+        ----------------------------------------
+        Productos adquiridos:
+        ${lista}
+        ----------------------------------------
+
+        Detalle del pedido:
+        - Cantidad total de ítems: ${cantidad_total}
+        - Total a pagar: ${formatPrice(total_compra)}
+
+        Si tienes cualquier duda o consulta, no dudes en contactarnos.
+
+        ¡Gracias por preferir UCN Cositas!
+        `;
+
+    return texto;
+  };
+
+
+  const handleSubmit = async (form) => {
     setLoading(true);
-    axios.post("http://localhost:3001/mail/send", {
+
+    const body = {
       to: form.email,
-      subject: "Confirmación de compra",
-      text: "Gracias por tu compra! Te contactaremos pronto."
-    })
+      subject: 'Gracias por tu compra a UCNcositas!!',
+      text: generarCuerpo(form.nombre),
+    }
+
+    try {
+      await Promise.all(
+        productos.map(p =>
+          axios.post(`${getBaseUrl()}/product/stock-reduce`, {
+            id_producto: p.id_producto,
+            stock_redux: p.cantidad,
+          })
+        )
+      );
+    } catch (error) {
+        const msg =
+          error.response?.data?.message ||
+          error.response?.data ||
+          error.message ||
+          "Error inesperado";
+
+        setMsg(msg);
+        setType('error');
+        setLoading(false)
+        return 
+    }
+
+    
+    await axios.post(`${getBaseUrl()}/mail/send`, body)
     .then(response => {
       setMsg('Compra realizada con exito, revisa tu correo.');
       setType('success')
@@ -53,9 +135,9 @@ export default function Carrito() {
     .catch(error => {
       setMsg("Error al enviar correo:", error.response?.data || error);
       setType('error')
-    })
-    .finally(() => setLoading(false));
+    });
 
+    setLoading(false);
     setCompraForm(false);
     localStorage.removeItem("carrito");
     setProductos([]);
@@ -63,41 +145,14 @@ export default function Carrito() {
 
 
 
+
   const eliminarProducto = (id) => {
     setProductos((prev) => prev.filter((p) => p.id !== id));
   };
 
-  //ARREGLAR EL BOTON DE SUMAR EN EL CARRITO O QUITARLOS NOMAS, ESTA SUMANDO TODOS A LA VEZ.
-  //AGREGAR UN POP UP QUE SE LANCE SI ESQUE BREAKSTOCKS NO ES NULL CON EL (&&)
-  const comprarAhora = () => {
-    //disminuir de la base de datos los productos.
-    productos.forEach(p => {
-      axios.get(`http://localhost:3001/product/validate-stock?id_producto=${p.id_producto}&push_stock=${p.cantidad}`)
-      .then(function (res){
-        if(!res.data.success) breakStocks.push(res.data.product);
-      })
-      .catch(function(error){
-        console.log(error)
-      })
-    });
-    
-    alert("Compra realizada con éxito");
 
-  };
 
-// arriba del componente: import { Spinner } from 'flowbite-react';
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F9FAFB]">
-        <div className="flex flex-col items-center gap-3">
-          <Spinner aria-label="Loading" size="xl" />
-          <span className="text-gray-600 text-sm">Cargando, por favor espera...</span>
-        </div>
-      </div>
-    );
-  }
-
+  if (loading) return <SpinnerModern fullScreen size={80} />
 
 
 
@@ -125,13 +180,13 @@ export default function Carrito() {
                     <div className="flex items-center gap-4">
                     <img
                         src={p.imagen}
-                        alt={p.nombre}
+                        alt={formatText(p.nombre)}
                         className="w-20 h-20 rounded-lg object-cover"
                     />
                     <div>
-                        <h3 className="font-medium text-gray-800">{p.nombre}</h3>
+                        <h3 className="font-medium text-gray-800">{formatText(p.nombre)}</h3>
                         <p className="text-gray-600">
-                        ${p.precio.toLocaleString()}
+                        {formatPrice(p.precio)}
                         </p>
                     </div>
                     </div>
@@ -183,7 +238,7 @@ export default function Carrito() {
         </div>
         </div>
                 {msg && (
-                    <Toast message={msg} type="success" />
+                    <Toast message={msg} type={type} />
                 )}
         <Footer/>
         </div>

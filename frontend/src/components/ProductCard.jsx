@@ -9,6 +9,24 @@ export default function ProductCard({ product, onMostrarProducto}) {
   const [image, setImage] = useState("")
   const [p] = useState(product)
 
+  const formatText = (text)=> {
+    if (!text) return "";
+
+    // Reemplaza guiones bajos por espacios
+    const withSpaces = text.replace(/_/g, " ");
+
+    // Convierte cada palabra a mayúscula inicial
+    const formatted = withSpaces.replace(/\b\w/g, (char) => char.toUpperCase());
+
+    return formatted;
+  };
+
+  const formatPrice = (price) => {
+    if (price == null) return "$0";
+    return `$${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+  };
+
+
 
   useEffect(() => {
     if (p) {
@@ -24,14 +42,14 @@ export default function ProductCard({ product, onMostrarProducto}) {
             >
               <img
                 src={`data:image/jpg;base64,${image}`}
-                alt={name}
+                alt={formatText(name)}
                 className="rounded-lg mb-4 h-48 object-contain"
               />
               <h3 className="font-semibold text-[#275DAD] mb-2 text-center">
-                  {name}
+                  {formatText(name)}
               </h3>
               <p className="text-[#5B616A] font-bold mb-4">
-                {price}
+                {formatPrice(price)}
               </p>
               <Button
                 onClick={() => onMostrarProducto(p)}

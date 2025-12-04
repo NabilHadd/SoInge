@@ -63,7 +63,7 @@ export class ProductoRepository {
 
     async updateStock(id_producto: number, push_stock: number){
         try {
-            this.prisma.producto.update({
+            await this.prisma.producto.update({
                 where: {
                     id_producto: id_producto,
                 },
@@ -75,6 +75,7 @@ export class ProductoRepository {
             throw new Error(error)
         }
     }
+
 
     async countProducts(){
         return this.prisma.producto.count();
@@ -95,6 +96,35 @@ export class ProductoRepository {
         return product
     }
 
+    async updateProduct(data){
+        const updateData: any = {}; 
+        if (data.nombre !== undefined) updateData.nombre = data.nombre;
+        if (data.descripcion !== undefined) updateData.descripcion = data.descripcion;
+        if (data.precio !== undefined) updateData.precio = data.precio;
+        if (data.stock !== undefined) updateData.stock = data.stock;
+        if (data.imagen !== undefined) updateData.imagen = data.imagen;
+        try {
+            await this.prisma.producto.update({
+                where: {
+                    id_producto: data.id_producto,
+                },
+                data: updateData,
+            });
+        } catch (error) {
+            throw new Error(error)
+        } 
+    }
+    async deleteProduct(id_producto: number){
+        try {
+            await this.prisma.producto.delete({
+                where: {
+                    id_producto: id_producto,
+                },
+            });
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
     
 
 }
