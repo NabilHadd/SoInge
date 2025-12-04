@@ -98,5 +98,8 @@ async updateProduct(data: { id_producto: number, nombre?: string, descripcion?: 
       imagen: imagenBuffer
     });
   }
+  async deleteProduct(id_producto: number) {
+    await this.repo.deleteProduct(id_producto);
+  }
 
 }

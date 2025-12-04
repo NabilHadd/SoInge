@@ -114,6 +114,17 @@ export class ProductoRepository {
             throw new Error(error)
         } 
     }
+    async deleteProduct(id_producto: number){
+        try {
+            await this.prisma.producto.delete({
+                where: {
+                    id_producto: id_producto,
+                },
+            });
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
     
 
 }
