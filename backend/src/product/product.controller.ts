@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, Param} from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Param, Put} from '@nestjs/common';
 import { ProductService } from './product.service';
 
 @Controller('product')
@@ -28,6 +28,7 @@ export class ProductController {
       count: await this.productService.getProductNum(),
     };
   }
+  
   @Post('create')
   async createProduct(@Body() body) {
     return this.productService.createProduct(body);
@@ -46,6 +47,11 @@ export class ProductController {
     const id_producto = body.id_producto;
     const stock_redux = body.stock_redux;
     return this.productService.reduceStock(id_producto, stock_redux);
+  }
+
+  @Put('update')
+  async updateProduct(@Body() body) {
+    return this.productService.updateProduct(body);
   }
 
 

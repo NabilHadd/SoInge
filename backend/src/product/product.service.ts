@@ -83,4 +83,19 @@ async getById(id: number){
   }
 }
 
+async updateProduct(data: { id_producto: number, nombre?: string, descripcion?: string, precio?: number, stock?: number, imagen?: string}) {
+    let imagenBuffer: Buffer | undefined = undefined;   
+    if (data.imagen) {
+      imagenBuffer = Buffer.from(data.imagen, 'base64'); 
+    }
+    await this.repo.updateProduct({
+      id_producto: data.id_producto,
+      nombre: data.nombre,
+      descripcion: data.descripcion,
+      precio: data.precio,
+      stock: data.stock,
+      imagen: imagenBuffer
+    });
+  }
+
 }
