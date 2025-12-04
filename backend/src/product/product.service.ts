@@ -98,6 +98,9 @@ async getById(id: number){
       imagen: imagenBuffer
     });
   }
+  async deleteProduct(id_producto: number) {
+    await this.repo.deleteProduct(id_producto);
+  }
 
   async logHistorialStock(id_producto: number, variacion: number, descripcion: string)
   {
