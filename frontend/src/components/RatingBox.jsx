@@ -24,12 +24,14 @@ export default function RatingBox({ reviewsNum, stars, reviews }) {
       <div className="flex flex-col gap-3 mt-3">
         {reviews.length > 0 ? (
           reviews.map((r, i) => (
+            r !== '' && (
             <div
               key={i}
               className="bg-[#F9FAFB] border border-gray-200 rounded-xl p-3 text-gray-700 shadow-sm"
             >
               {r}
             </div>
+            )
           ))
         ) : (
           <p className="text-gray-500 italic">Aún no hay reseñas.</p>

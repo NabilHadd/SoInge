@@ -60,6 +60,18 @@ async reduceStock(id_producto: number, stock_redux: number){
   await this.repo.updateStock(id_producto, new_stock);
 }
 
-
+async getById(id: number){
+  const p = await this.repo.finProductById(id);
+  
+  return {
+    id_producto: p.id_producto,
+    nombre: p.nombre,
+    descripcion: p.descripcion,
+    precio: p.precio,
+    stock: p.stock,
+    imagen: Buffer.from(p.imagen).toString("base64"),
+    reviews: p.reseñas
+  }
+}
 
 }

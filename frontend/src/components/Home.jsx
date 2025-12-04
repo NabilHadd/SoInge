@@ -21,6 +21,14 @@ function Home() {
   const handleAdminRedirect = () => {
     navigate('/Login'); // ruta a la que quieres ir
   };
+  
+  const refreshProduct = async (id) => {
+    console.log('hola')
+    const { data } = await axios.get(`http://localhost:3001/product/byId/${id}`);
+    setProducto(data)
+    console.log(data)
+    console.log(producto)
+  };
 
   const handleMostrarProducto = (p) => {
     setProducto(p)
@@ -44,7 +52,7 @@ function Home() {
 
 
   if (producto){
-    return <Producto producto={producto} onMostrarProducto={handleMostrarProducto}/>
+    return <Producto producto={producto} onMostrarProducto={handleMostrarProducto} refreshProduct ={refreshProduct}/>
   }
 
   return (

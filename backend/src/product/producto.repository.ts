@@ -69,6 +69,21 @@ export class ProductoRepository {
         return this.prisma.producto.count();
     } 
 
+    async finProductById(id: number){
+        const product = await this.prisma.producto.findUnique({
+            where: {
+                id_producto: id,
+            },
+            include: {
+                reseñas: true,
+            },
+        });
+
+        if (!product) throw new Error("");
+        
+        return product
+    }
+
     
 
 }

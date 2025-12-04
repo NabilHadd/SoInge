@@ -1,16 +1,8 @@
 1
 /var/lib/postgresql/data
-<<<<<<< HEAD
-1763674767
+1764803156
 5432
 /var/run/postgresql
 *
     39630         0
-=======
-1762996222
-5432
-/var/run/postgresql
-*
-    39919         5
->>>>>>> origin/adminPage
 ready   

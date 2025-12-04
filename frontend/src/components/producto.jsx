@@ -1,5 +1,5 @@
 // src/Home.js
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Button } from "flowbite-react";
 import CantidadInput from './CantidadInput';
 import RatingBox from './RatingBox';
@@ -10,12 +10,11 @@ import Header from './Header';
 import Toast from './Toast';
 import axios from 'axios';
 
-function Producto({ producto, onMostrarProducto}) {
+function Producto({ producto, onMostrarProducto, refreshProduct}) {
 
-  const [open, setOpen] = useState(false);
+  const [openForm, setOpenForm] = useState(false);
   const [cantidad, setCantidad] = useState(1);
   const [mensaje, setMensaje] = useState("");
-
 
   
   const handleAgregarAlCarrito = () => {
@@ -43,9 +42,9 @@ function Producto({ producto, onMostrarProducto}) {
 
   
   const handleSubmit = async (review) => {
-    setOpen(false)
+    setOpenForm(false)
 
-    axios.post('http://localhost:3001/product/review', {
+    await axios.post('http://localhost:3001/product/review', {
         id_producto: producto.id_producto,
         valoracion: review.valoracion,
         descripcion: review.descripcion
@@ -56,6 +55,9 @@ function Producto({ producto, onMostrarProducto}) {
       .catch(function (error) {
         console.log(error);
       });
+
+      refreshProduct(producto.id_producto)
+
   }
 
 
@@ -121,7 +123,7 @@ function Producto({ producto, onMostrarProducto}) {
         />
 
         <Button
-        onClick={() => setOpen(true)}
+        onClick={() => setOpenForm(true)}
           color="blue"
           size="lg"
           className="w-fit font-semibold shadow-md transition-transform hover:scale-105"
@@ -129,8 +131,8 @@ function Producto({ producto, onMostrarProducto}) {
           Agregar Reseña
         </Button>
 
-        <ModalLock isOpen={open}>
-          <ReviewForm onCancel={setOpen} onSubmit={handleSubmit} onClose={setOpen}/>
+        <ModalLock isOpen={openForm}>
+          <ReviewForm onCancel={setOpenForm} onSubmit={handleSubmit} onClose={setOpenForm}/>
         </ModalLock>
 
       </div>
