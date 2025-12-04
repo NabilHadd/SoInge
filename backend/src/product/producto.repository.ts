@@ -95,6 +95,25 @@ export class ProductoRepository {
         
         return product
     }
+
+    async updateProduct(data){
+        const updateData: any = {}; 
+        if (data.nombre !== undefined) updateData.nombre = data.nombre;
+        if (data.descripcion !== undefined) updateData.descripcion = data.descripcion;
+        if (data.precio !== undefined) updateData.precio = data.precio;
+        if (data.stock !== undefined) updateData.stock = data.stock;
+        if (data.imagen !== undefined) updateData.imagen = data.imagen;
+        try {
+            await this.prisma.producto.update({
+                where: {
+                    id_producto: data.id_producto,
+                },
+                data: updateData,
+            });
+        } catch (error) {
+            throw new Error(error)
+        } 
+    }
     
 
 }
