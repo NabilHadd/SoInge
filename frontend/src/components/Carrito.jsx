@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "flowbite-react";
-import { Trash2} from "lucide-react";
+import { Dessert, Trash2} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Header from "./Utils/Header";
 import Footer from "./Utils/Footer";
@@ -98,6 +98,17 @@ export default function Carrito() {
   const handleSubmit = async (form) => {
     setLoading(true);
 
+    const compraBody = {
+      total: productos.reduce((acc, p) => acc + p.precio * p.cantidad, 0),
+      rut_comprador: form.rut,
+      rut_admin: "online",      
+      detalles: productos.map(p => ({
+        id_producto: p.id_producto,
+        cantidad: p.cantidad,
+        subtotal: p.precio * p.cantidad
+      })),
+    };
+
     const body = {
       to: form.email,
       subject: 'Gracias por tu compra a UCNcositas!!',
@@ -113,6 +124,22 @@ export default function Carrito() {
           })
         )
       );
+
+      await Promise.all(
+        productos.map(p =>
+          axios.post(`${getBaseUrl()}/product/log-stock`, {
+            id_producto: p.id_producto,
+            variacion: -p.cantidad,
+            descripcion: 'Venta Online'
+
+          })
+        )
+      );
+
+    await axios.post(`${getBaseUrl()}/compra/log`, compraBody);
+
+      
+      
     } catch (error) {
         const msg =
           error.response?.data?.message ||
@@ -125,6 +152,8 @@ export default function Carrito() {
         setLoading(false)
         return 
     }
+
+
 
     
     await axios.post(`${getBaseUrl()}/mail/send`, body)

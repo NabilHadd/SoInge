@@ -3,6 +3,7 @@ import logo1 from '../../assets/logo.webp';
 import { useEffect, useState } from 'react';
 import { getProductCount, getAllProducts } from '../../api/products.ts';
 import { Link } from "react-router-dom";
+import { getDailyIncome } from "../../api/compras.ts";
 
 
 
@@ -21,19 +22,26 @@ export function ProductCounter() {
 
 export default function AdminHome() {
   const [productos, setProductos] = useState([]);
+  const [ingresosHoy, setIngresosHoy] = useState(0);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await getAllProducts();
-        setProductos(data);
-      } catch (error) {
-        console.error("Error al obtener productos:", error);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const products = await getAllProducts();
+      setProductos(products);
 
-    fetchProducts();
+      const ingresos = await getDailyIncome();
+      setIngresosHoy(ingresos);
+    } catch (error) {
+      console.error("Error al cargar datos:", error);
+    }
+  };
+
+    fetchData();
   }, []);
+
+  
+
   return(
     <div class="bg-[#FCF7F8] flex h-screen">
   
@@ -44,8 +52,7 @@ export default function AdminHome() {
         <Link to="/AdminHome" class="text-[#275DAD] font-semibold hover:text-[#5B616A] transition-colors">Dashboard</Link>
         <Link to="/Inventario" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Inventario</Link>
         <Link to="/Ventas" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Ventas</Link>
-        <Link to="/Usuarios" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Usuarios</Link>
-        <Link to="/Configuracion" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Configuración</Link>
+      
       </nav>
     </aside>
   
@@ -64,11 +71,9 @@ export default function AdminHome() {
           Total Productos: <ProductCounter />
         </div>
         <div class="bg-gradient-to-r from-[#275DAD] to-[#5B616A] p-4 rounded-xl shadow-lg text-white font-semibold transform hover:scale-105 transition-transform">
-          Ingresos Hoy: $2,500
+          Ingresos Hoy: ${ingresosHoy}
         </div>
-        <div class="bg-gradient-to-r from-[#5B616A] to-[#ABA9C3] p-4 rounded-xl shadow-lg text-white font-semibold transform hover:scale-105 transition-transform">
-          Usuarios Activos: 45
-        </div>
+
       </div>
   
   
@@ -103,14 +108,7 @@ export default function AdminHome() {
 
   
     
-      <div class="bg-[#CED3DC] p-4 rounded-xl shadow-lg">
-        <h2 class="text-2xl font-extrabold bg-gradient-to-r from-[#275DAD] via-[#ABA9C3] to-[#5B616A] bg-clip-text text-transparent drop-shadow-md mb-4">
-          Ingresos Mensuales
-        </h2>
-        <div class="w-full h-64 bg-white flex items-center justify-center text-[#5B616A] font-medium rounded-lg shadow-inner">
-          [Gráfico de ingresos aquí]
-        </div>
-      </div>
+      
   
     </div>
   

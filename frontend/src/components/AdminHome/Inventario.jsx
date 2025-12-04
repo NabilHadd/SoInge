@@ -140,8 +140,7 @@ export default function AdminHome() {
           <Link to="/AdminHome" className="text-[#5B616A] hover:text-[#275DAD] transition-colors">Dashboard</Link>
           <Link to="/Inventario" className="text-[#275DAD] font-semibold hover:text-[#5B616A] transition-colors">Inventario</Link>
           <Link to="/Ventas" className="text-[#5B616A] hover:text-[#275DAD] transition-colors">Ventas</Link>
-          <Link to="/Usuarios" className="text-[#5B616A] hover:text-[#275DAD] transition-colors">Usuarios</Link>
-          <Link to="/Configuracion" className="text-[#5B616A] hover:text-[#275DAD] transition-colors">Configuración</Link>
+
         </nav>
       </aside>
 
