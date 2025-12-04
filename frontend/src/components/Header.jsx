@@ -13,43 +13,42 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-[#CED3DC] p-4 shadow-lg flex justify-between items-center">
-      
-      {/* Menú hamburguesa */}
+    <header className="backdrop-blur-md bg-white/70 border-b border-blue-200 shadow-sm px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+
+      {/* Marca + Menú */}
       <div className="flex items-center gap-4">
         <MenuHamburguesa />
+
         <h1
-          className="text-2xl font-bold text-[#1C1C1C] cursor-pointer"
+          className="text-3xl font-black tracking-tight text-blue-700 hover:text-blue-900 transition-colors cursor-pointer"
           onClick={() => navigate("/")}
         >
-          UCNcositas
+          UCN<span className="text-black">cositas</span>
         </h1>
       </div>
 
-      {/* Botones a la derecha */}
+      {/* Botones */}
       <div className="flex items-center gap-3">
 
-        {/* Botón limpiar localStorage */}
+        {/* Limpiar */}
         <Button
-          color="failure"
-          className="flex items-center gap-2"
+          color="light"
+          className="flex items-center gap-2 text-red-600 border-red-300 hover:bg-red-100 transition-all"
           onClick={limpiarLocalStorage}
         >
           <Trash2 size={18} />
           Limpiar Datos
         </Button>
 
-        {/* Botón al carrito */}
+        {/* Carrito */}
         <Button
-          color="blue"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg transition-all"
           onClick={() => navigate("/carrito")}
         >
           <ShoppingCart size={18} />
           Carrito
         </Button>
       </div>
-
     </header>
   );
 }

@@ -9,70 +9,83 @@ export default function MenuHamburguesa() {
 
   return (
     <>
-      {/* Botón de menú */}
+      {/* Botón hamburguesa */}
       <Button
-        color="gray"
+        color="blue"
         pill
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-center w-10 h-10 p-0 z-50"
+        className="flex items-center justify-center w-14 h-14 p-0 transition-all z-50 bg-blue-600 hover:bg-blue-700 text-white"
       >
-        {open ? <X size={22} /> : <Menu size={22} />}
+        {open ? <X size={26} /> : <Menu size={26} />}
       </Button>
 
-      {/* Menú lateral */}
-      {open && (
+      {/* Overlay */}
+      <div
+        className={`fixed top-0 left-0 w-screen h-screen backdrop-blur-md bg-black/30 z-50 transition-opacity duration-500 ${
+          open ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setOpen(false)}
+      >
+        {/* Menú lateral */}
         <div
-          className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-40"
-          onClick={() => setOpen(false)}
+          className={`absolute top-0 left-0 h-full w-72 bg-white/90 backdrop-blur-xl p-6 pt-24 flex flex-col gap-6 transform transition-transform duration-500 ${
+            open ? "translate-x-0" : "-translate-x-full"
+          }`}
+          onClick={(e) => e.stopPropagation()}
         >
-          <div
-            className="absolute top-0 left-0 h-full w-64 bg-white shadow-xl p-6 pt-16 flex flex-col gap-4" 
-            onClick={(e) => e.stopPropagation()}
+          {/* Botón de cierre */}
+          <button
+            onClick={() => setOpen(false)}
+            className="absolute top-6  p-2 rounded-full hover:bg-blue-100 transition-colors"
           >
-            <h2 className="text-2xl font-bold text-[#275DAD] mb-4">Menú</h2>
+            <X size={28} className="text-blue-700" />
+          </button>
 
-            <button
-              onClick={() => {
-                navigate("/");
-                setOpen(false);
-              }}
-              className="text-lg text-gray-700 hover:text-blue-600 transition-colors"
-            >
-              Inicio
-            </button>
+          <h2 className="text-3xl font-extrabold text-blue-700 mb-4 tracking-widest">
+            Menú
+          </h2>
 
-            <button
-              onClick={() => {
-                navigate("/catalogo");
-                setOpen(false);
-              }}
-              className="text-lg text-gray-700 hover:text-blue-600 transition-colors"
-            >
-              Catálogo
-            </button>
+          <Button
+            color="blue"
+            size="lg"
+            fullSized
+            className="justify-start hover:bg-blue-700"
+            onClick={() => { navigate("/"); setOpen(false); }}
+          >
+            Inicio
+          </Button>
 
-            <button
-              onClick={() => {
-                navigate("/carrito");
-                setOpen(false);
-              }}
-              className="text-lg text-gray-700 hover:text-blue-600 transition-colors"
-            >
-              Carrito
-            </button>
+          <Button
+            color="blue"
+            size="lg"
+            fullSized
+            className="justify-start hover:bg-blue-700"
+            onClick={() => { navigate("/catalogo"); setOpen(false); }}
+          >
+            Catálogo
+          </Button>
 
-            <button
-              onClick={() => {
-                navigate("/perfil");
-                setOpen(false);
-              }}
-              className="text-lg text-gray-700 hover:text-blue-600 transition-colors"
-            >
-              Perfil
-            </button>
-          </div>
+          <Button
+            color="blue"
+            size="lg"
+            fullSized
+            className="justify-start hover:bg-blue-700"
+            onClick={() => { navigate("/carrito"); setOpen(false); }}
+          >
+            Carrito
+          </Button>
+
+          <Button
+            color="blue"
+            size="lg"
+            fullSized
+            className="justify-start hover:bg-blue-700"
+            onClick={() => { navigate("/perfil"); setOpen(false); }}
+          >
+            Perfil
+          </Button>
         </div>
-      )}
+      </div>
     </>
   );
 }

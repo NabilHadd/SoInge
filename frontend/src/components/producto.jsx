@@ -101,18 +101,29 @@ function Producto({ producto, onMostrarProducto, refreshProduct}) {
               {producto.descripcion}
             </p>
 
-            <CantidadInput maxCantidad={producto.stock} onCantidad={setCantidad} cantidad={1}/>
+            {producto.stock > 0 ? (
+              <>
+                <CantidadInput maxCantidad={producto.stock} onCantidad={setCantidad} cantidad={1}/>
 
 
-            {/* Botón */}
-            <Button
-              onClick={() => handleAgregarAlCarrito()}
-              color="blue"
-              size="lg"
-              className="w-fit font-semibold shadow-md transition-transform hover:scale-105"
-            >
-              🛒 Agregar al carrito
-            </Button>
+                {/* Botón */}
+                <Button
+                  onClick={() => handleAgregarAlCarrito()}
+                  color="blue"
+                  size="lg"
+                  className="w-fit font-semibold shadow-md transition-transform hover:scale-105"
+                >
+                  🛒 Agregar al carrito
+                </Button>
+              </>
+              
+            ) : (
+
+              <p>No hay stock disponible.</p>
+
+            )}
+
+
 
           </div>
         </div>

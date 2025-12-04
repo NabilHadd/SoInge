@@ -52,7 +52,7 @@ export class ProductoRepository {
 
     async updateStock(id_producto: number, push_stock: number){
         try {
-            this.prisma.producto.update({
+            await this.prisma.producto.update({
                 where: {
                     id_producto: id_producto,
                 },
@@ -64,6 +64,7 @@ export class ProductoRepository {
             throw new Error(error)
         }
     }
+
 
     async countProducts(){
         return this.prisma.producto.count();
@@ -83,7 +84,6 @@ export class ProductoRepository {
         
         return product
     }
-
     
 
 }
