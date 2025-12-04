@@ -44,8 +44,7 @@ export default function AdminHome() {
         <Link to="/AdminHome" class="text-[#275DAD] font-semibold hover:text-[#5B616A] transition-colors">Dashboard</Link>
         <Link to="/Inventario" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Inventario</Link>
         <Link to="/Ventas" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Ventas</Link>
-        <Link to="/Usuarios" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Usuarios</Link>
-        <Link to="/Configuracion" class="text-[#5B616A] hover:text-[#275DAD] transition-colors">Configuración</Link>
+      
       </nav>
     </aside>
   
@@ -66,9 +65,7 @@ export default function AdminHome() {
         <div class="bg-gradient-to-r from-[#275DAD] to-[#5B616A] p-4 rounded-xl shadow-lg text-white font-semibold transform hover:scale-105 transition-transform">
           Ingresos Hoy: $2,500
         </div>
-        <div class="bg-gradient-to-r from-[#5B616A] to-[#ABA9C3] p-4 rounded-xl shadow-lg text-white font-semibold transform hover:scale-105 transition-transform">
-          Usuarios Activos: 45
-        </div>
+
       </div>
   
   
