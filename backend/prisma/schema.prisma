@@ -49,15 +49,15 @@ model Compra {
 }
 
 model DetalleCompra {
-  id_detalle  Int
   id_compra   Int
   id_producto Int
   cantidad    Int
-  subtotal    Decimal  @db.Decimal(10, 2)
+  subtotal    Decimal @db.Decimal(10, 2)
+
   compra      Compra   @relation(fields: [id_compra], references: [id_compra])
   producto    Producto @relation(fields: [id_producto], references: [id_producto])
 
-  @@id([id_detalle, id_compra, id_producto])
+  @@id([id_compra, id_producto])
 }
 
 model HistorialStock {

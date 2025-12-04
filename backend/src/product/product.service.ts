@@ -84,7 +84,7 @@ async getById(id: number){
   }
 }
 
-async updateProduct(data: { id_producto: number, nombre?: string, descripcion?: string, precio?: number, stock?: number, imagen?: string}) {
+  async updateProduct(data: { id_producto: number, nombre?: string, descripcion?: string, precio?: number, stock?: number, imagen?: string}) {
     let imagenBuffer: Buffer | undefined = undefined;   
     if (data.imagen) {
       imagenBuffer = Buffer.from(data.imagen, 'base64'); 
@@ -98,5 +98,17 @@ async updateProduct(data: { id_producto: number, nombre?: string, descripcion?: 
       imagen: imagenBuffer
     });
   }
+
+  async logHistorialStock(id_producto: number, variacion: number, descripcion: string)
+  {
+    const body = {
+      id_producto: id_producto,
+      variacion: variacion,
+      descripcion: descripcion
+    } 
+    this.repo.logStock(body);
+
+  }
+
 
 }
