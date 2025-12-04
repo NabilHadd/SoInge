@@ -26,6 +26,24 @@ export default function Carrito() {
     return saved ? JSON.parse(saved): [];
   });
 
+  const formatText = (text)=> {
+    if (!text) return "";
+
+    // Reemplaza guiones bajos por espacios
+    const withSpaces = text.replace(/_/g, " ");
+
+    // Convierte cada palabra a mayúscula inicial
+    const formatted = withSpaces.replace(/\b\w/g, (char) => char.toUpperCase());
+
+    return formatted;
+  };
+
+  const formatPrice = (price) => {
+    if (price == null) return "$0";
+    return `$${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+  };
+
+
   useEffect(() => {
     localStorage.setItem("carrito", JSON.stringify(productos));
   }, [productos]);
@@ -45,7 +63,7 @@ export default function Carrito() {
     const lista = productos
       .map(
         (p) =>
-          `• ${p.nombre}\n\t\tCantidad: ${p.cantidad}\n\t\tSubtotal: $${p.precio * p.cantidad}`
+          `• ${p.nombre}\n\t\tCantidad: ${p.cantidad}\n\t\tSubtotal: ${formatPrice(p.precio * p.cantidad)}`
       )
       .join("\n\n\t");
 
@@ -66,7 +84,7 @@ export default function Carrito() {
 
         Detalle del pedido:
         - Cantidad total de ítems: ${cantidad_total}
-        - Total a pagar: $${total_compra}
+        - Total a pagar: ${formatPrice(total_compra)}
 
         Si tienes cualquier duda o consulta, no dudes en contactarnos.
 
@@ -162,13 +180,13 @@ export default function Carrito() {
                     <div className="flex items-center gap-4">
                     <img
                         src={p.imagen}
-                        alt={p.nombre}
+                        alt={formatText(p.nombre)}
                         className="w-20 h-20 rounded-lg object-cover"
                     />
                     <div>
-                        <h3 className="font-medium text-gray-800">{p.nombre}</h3>
+                        <h3 className="font-medium text-gray-800">{formatText(p.nombre)}</h3>
                         <p className="text-gray-600">
-                        ${p.precio.toLocaleString()}
+                        {formatPrice(p.precio)}
                         </p>
                     </div>
                     </div>

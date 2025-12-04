@@ -30,7 +30,7 @@ export default function Header() {
       {/* Botones */}
       <div className="flex items-center gap-3">
 
-        {/* Limpiar */}
+        {/* Limpiar
         <Button
           color="light"
           className="flex items-center gap-2 text-red-600 border-red-300 hover:bg-red-100 transition-all"
@@ -39,7 +39,7 @@ export default function Header() {
           <Trash2 size={18} />
           Limpiar Datos
         </Button>
-
+        */}
         {/* Carrito */}
         <Button
           className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg transition-all"

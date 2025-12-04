@@ -17,6 +17,25 @@ function Producto({ producto, onMostrarProducto, refreshProduct}) {
   const [cantidad, setCantidad] = useState(1);
   const [mensaje, setMensaje] = useState("");
   const {getBaseUrl} = useApi();
+
+  const formatText = (text)=> {
+    if (!text) return "";
+
+    // Reemplaza guiones bajos por espacios
+    const withSpaces = text.replace(/_/g, " ");
+
+    // Convierte cada palabra a mayúscula inicial
+    const formatted = withSpaces.replace(/\b\w/g, (char) => char.toUpperCase());
+
+    return formatted;
+  };
+
+  const formatPrice = (price) => {
+    if (price == null) return "$0";
+    return `$${price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+  };
+
+
   
   const handleAgregarAlCarrito = () => {
     const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
@@ -91,11 +110,11 @@ function Producto({ producto, onMostrarProducto, refreshProduct}) {
           {/* Detalles */}
           <div className="flex-1 flex flex-col gap-6">
             <h1 className="text-4xl font-bold text-gray-800">
-              {producto.nombre}
+              {formatText(producto.nombre)}
             </h1>
 
             <p className="text-2xl font-semibold text-[#275DAD]">
-              {producto.precio}
+              {formatPrice(producto.precio)}
             </p>
 
             <p className="text-gray-600 leading-relaxed">
