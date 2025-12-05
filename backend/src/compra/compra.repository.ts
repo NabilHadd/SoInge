@@ -28,5 +28,35 @@ export class CompraRepository {
             },
         });
     }
+    async ingresosDelDia() {
+    const result = await this.prisma.compra.aggregate({
+      _sum: {
+        total: true,
+      },
+      where: {
+        fecha: {
+          gte: new Date(new Date().setHours(0, 0, 0, 0)),
+          lte: new Date(new Date().setHours(23, 59, 59, 999)),
+        },
+      },
+    });
+
+    return result._sum.total ?? 0;
+  }
+  async obtenerComprasConDetalles() {
+  return await this.prisma.compra.findMany({
+    include: {
+      detalle_compra: {
+        include: {
+          producto: true,   // ← si quieres traer también el producto completo
+        },
+      },
+    },
+    orderBy: {
+      fecha: 'desc',
+    },
+  });
+}
+
         
 }
