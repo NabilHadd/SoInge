@@ -43,20 +43,22 @@ export class CompraRepository {
 
     return result._sum.total ?? 0;
   }
-  async obtenerComprasConDetalles() {
-  return await this.prisma.compra.findMany({
-    include: {
-      detalle_compra: {
+
+    async obtenerComprasConDetalles() {
+    return this.prisma.compra.findMany({
         include: {
-          producto: true,   // ← si quieres traer también el producto completo
+        detalles: {
+            include: {
+            producto: true,
+            },
         },
-      },
-    },
-    orderBy: {
-      fecha: 'desc',
-    },
-  });
-}
+        },
+        orderBy: {
+        fecha: 'desc',
+        },
+    });
+    }
+
 
         
 }
