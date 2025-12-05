@@ -17,4 +17,14 @@ export class CompraController {
   ) {
     return this.compraService.logCompra(body);
   }
+
+  @Get('ingresos-dia')
+  async ingresosDia() {
+    const monto = await this.compraService.obtenerIngresosDelDia();
+    return { ingresos_dia: monto };
+  }
+  @Get('detalles')
+  async obtenerComprasConDetalles() {
+    return this.compraService.obtenerComprasConDetalles();
+  }
 }

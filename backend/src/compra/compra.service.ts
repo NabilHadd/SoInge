@@ -14,4 +14,11 @@ export class CompraService {
   }) {
     return this.compraRepository.logCompra(body);
   }
+  async obtenerIngresosDelDia() {
+    return this.compraRepository.ingresosDelDia();
+  }
+  async obtenerComprasConDetalles() {
+  return this.compraRepository.obtenerComprasConDetalles();
+  }
+
 }
